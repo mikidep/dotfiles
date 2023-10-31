@@ -12,24 +12,17 @@
       url = "github:elkowar/eww";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    /*
-       flatpak = {
-      url = "github:yawnt/declarative-nix-flatpak/main";
+    nix-index-database = {
+      url = "github:Mic92/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    */
-    /*
-       flatpaks = {
-      url = "github:GermanBread/declarative-flatpak/stable";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    */
   };
 
   outputs = {
     nixpkgs,
     home-manager,
     eww,
+    nix-index-database,
     ...
   }: let
     system = "x86_64-linux";
@@ -47,6 +40,7 @@
       modules = [
         ./home.nix
         ./desktop.nix
+        nix-index-database.hmModules.nix-index
       ];
 
       extraSpecialArgs = {

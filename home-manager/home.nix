@@ -20,7 +20,7 @@
 
     firefox
     chromium
-    discord
+    # discord
     telegram-desktop
     gimp
     vlc
