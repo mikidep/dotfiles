@@ -1,8 +1,9 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   imports = [
     ./vscode.nix
     ./shell.nix
     ./ssh.nix
+    ./design_tools.nix
   ];
 
   # Home Manager needs a bit of information about you and the
@@ -11,33 +12,40 @@
   home.homeDirectory = "/home/mikidep";
 
   # Packages that should be installed to the user profile.
-  home.packages = with pkgs; [
-    (agda.withPackages (p: [ p.cubical p.standard-library ]))
-    stack
-    nerdfonts
-    nnn
-    trashy
+  home.packages = let
+    #    astapkgs = pkgs.fetchFromGitHub {
+    #      owner = "Astavie";
+    #      repo = "astapkgs";
+    #      rev = "9443cc9";
+    #      hash = "sha256-Lv5JtokxtOv8Jud9nZgyPY5WC5DVqSdOh1GbkBZIPzk=";
+    #    };
+    #    discord-screenaudio = pkgs.qt6Packages.callPackage "${astapkgs}/discord-screenaudio.nix" {};
+  in
+    with pkgs; [
+      (agda.withPackages (p: [p.cubical p.standard-library]))
+      stack
+      nerdfonts
+      nnn
+      trashy
 
-    firefox
-    chromium
-    # discord
-    telegram-desktop
-    gimp
-    vlc
-    jabref
-    inkscape
-    openscad
-    signal-desktop
-    ffmpeg_6-full
-    audacity
+      firefox
+      chromium
+      # discord
+      telegram-desktop
+      gimp
+      vlc
+      jabref
+      inkscape
+      #    openscad
+      signal-desktop
+      ffmpeg_6-full
+      audacity
 
-    alsa-tools  
-    qpwgraph
-    reaper
-    
-
-  ];
-
+      alsa-tools
+      qpwgraph
+      reaper
+      #     discord-screenaudio
+    ];
 
   fonts.fontconfig.enable = true;
 

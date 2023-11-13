@@ -26,6 +26,7 @@ in {
     libnotify
     font-awesome
     (callPackage ./hyprshot.nix {})
+    swww
   ];
 
   services.dunst = {
@@ -49,9 +50,22 @@ in {
         "NIXOS_OZONE_WL,1"
       ];
 
-      exec-once = [
-        "${pkgs.swww}/bin/swww"
+      exec-once = let
+        convert = "${pkgs.imagemagick}/bin/convert";
+        font = "${pkgs.iosevka}/share/fonts/truetype/iosevka-extendedmediumitalic.ttf";
+        bg = pkgs.runCommand "desktop-bg.png" {} ''
+          ${convert} -font ${font} \
+            -background black \
+            -fill white \
+            -pointsize 24 \
+            label:"oh no, not you again!" $out
+        '';
+      in [
+        "swww init && swww img ${bg} --no-resize"
         "eww open bar"
+      ];
+
+      exec = [
       ];
 
       input = {
@@ -105,9 +119,11 @@ in {
         "SUPER, mouse:273, resizewindow"
         "SUPER, mouse:274, movewindow"
       ];
-      binde = [
-        ", XF86AudioRaiseVolume, exec, wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+"
-        ", XF86AudioLowerVolume, exec, wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%-"
+      binde = let
+        unmute = "wpctl set-mute @DEFAULT_AUDIO_SINK@ 0";
+      in [
+        ", XF86AudioRaiseVolume, exec, ${unmute}; wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+"
+        ", XF86AudioLowerVolume, exec, ${unmute}; wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%-"
         ", XF86MonBrightnessUp, exec, ${pkgs.brightnessctl}/bin/brightnessctl s +10%"
         ", XF86MonBrightnessDown, exec, ${pkgs.brightnessctl}/bin/brightnessctl s 10%-"
         ", XF86AudioMute,        exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
@@ -163,7 +179,6 @@ in {
   };
   xdg.desktopEntries.firefox = let
     firefox = pkgs.firefox;
-    
   in {
     type = "Application";
     name = "Firefox";
