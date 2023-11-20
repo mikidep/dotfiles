@@ -4,6 +4,7 @@
     ./shell.nix
     ./ssh.nix
     ./design_tools.nix
+    ./nvim.nix
   ];
 
   # Home Manager needs a bit of information about you and the
@@ -68,7 +69,6 @@
     userName = "Michele De Pascalis";
     userEmail = "michele.de.pascalis.1024@gmail.com";
   };
-  programs.neovim.enable = true;
 
   programs.obs-studio = {
     enable = true;

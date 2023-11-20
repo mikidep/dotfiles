@@ -1,4 +1,11 @@
-{pkgs, lib, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
+  home.packages = with pkgs; [
+    clang-tools
+  ];
   programs.vscode = {
     enable = true;
     package = pkgs.vscode;
@@ -17,45 +24,52 @@
         inherit vscodeExtPublisher vscodeExtName;
         vscodeExtUniqueId = "${vscodeExtPublisher}.${vscodeExtName}";
       };
-    in with pkgs.vscode-extensions;
-      [
-        yzhang.markdown-all-in-one
-        jnoortheen.nix-ide
-        james-yu.latex-workshop
-      ]
-      # ++ [ agda-mode ]
-      ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-        {
-          name = "remote-ssh-edit";
-          publisher = "ms-vscode-remote";
-          version = "0.47.2";
-          sha256 = "1hp6gjh4xp2m1xlm1jsdzxw9d8frkiidhph6nvl24d0h8z34w49g";
-        }
-        {
-          name = "vscode-pitch-black-theme";
-          publisher = "viktorqvarfordt";
-          version = "1.3.0";
-          sha256 = "sha256-1JDm/cWNWwxa1gNsHIM/DIvqjXsO++hAf0mkjvKyi4g=";
-        }
-        # {
-        #   name = "agda-mode-fork";
-        #   publisher = "GuilhermeEspada";
-        #   version = "0.3.12";
-        #   sha256 = "sha256-g1p3JjnkPYr2I7TRTClx5OYazyQxpkM6fnqiXWJoaSI=";
-        # }
-        {
-          name = "agda-mode";
-          publisher = "banacorn";
-          version = "0.4.1";
-          sha256 = "sha256-Zt2OifhS5BI0HcMZkKOa1gqV9Vpj0lIUR6VcHvX5M9o=";
-        }
-        {
-          name = "yuck";
-          publisher = "eww-yuck";
-          version = "0.0.3";
-          sha256 = "sha256-DITgLedaO0Ifrttu+ZXkiaVA7Ua5RXc4jXQHPYLqrcM=";
-        }
-      ];
+    in
+      with pkgs.vscode-extensions;
+        [
+          yzhang.markdown-all-in-one
+          jnoortheen.nix-ide
+          james-yu.latex-workshop
+        ]
+        # ++ [ agda-mode ]
+        ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+          {
+            name = "remote-ssh-edit";
+            publisher = "ms-vscode-remote";
+            version = "0.47.2";
+            sha256 = "1hp6gjh4xp2m1xlm1jsdzxw9d8frkiidhph6nvl24d0h8z34w49g";
+          }
+          {
+            name = "vscode-pitch-black-theme";
+            publisher = "viktorqvarfordt";
+            version = "1.3.0";
+            sha256 = "sha256-1JDm/cWNWwxa1gNsHIM/DIvqjXsO++hAf0mkjvKyi4g=";
+          }
+          # {
+          #   name = "agda-mode-fork";
+          #   publisher = "GuilhermeEspada";
+          #   version = "0.3.12";
+          #   sha256 = "sha256-g1p3JjnkPYr2I7TRTClx5OYazyQxpkM6fnqiXWJoaSI=";
+          # }
+          {
+            name = "agda-mode";
+            publisher = "banacorn";
+            version = "0.4.1";
+            sha256 = "sha256-Zt2OifhS5BI0HcMZkKOa1gqV9Vpj0lIUR6VcHvX5M9o=";
+          }
+          {
+            name = "yuck";
+            publisher = "eww-yuck";
+            version = "0.0.3";
+            sha256 = "sha256-DITgLedaO0Ifrttu+ZXkiaVA7Ua5RXc4jXQHPYLqrcM=";
+          }
+          {
+            name = "openscad-language-support";
+            publisher = "Leathong";
+            version = "1.2.5";
+            sha256 = "sha256-/CLxBXXdUfYlT0RaGox1epHnyAUlDihX1LfT5wGd2J8=";
+          }
+        ];
     userSettings = {
       "workbench.colorTheme" = "Pitch Black";
 
@@ -204,7 +218,12 @@
             text = "ω";
           }
           {
-            key = "Shift+Alt+,";
+            key = "Alt+Y";
+            text = "よ";
+          }
+
+          {
+            key = "Alt+;";
             text = "；";
           }
           {

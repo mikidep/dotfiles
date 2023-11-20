@@ -40,6 +40,11 @@ in {
     enable = true;
     enableNvidiaPatches = true;
     settings = {
+      misc = {
+        disable_hyprland_logo = true;
+        disable_splash_rendering = true;
+      };
+
       monitor = [
         "HDMI-A-1,preferred,auto,auto"
         ",preferred,auto,1"
@@ -71,6 +76,7 @@ in {
       input = {
         kb_layout = "it";
         numlock_by_default = true;
+        follow_mouse = 2;
       };
 
       general = {
