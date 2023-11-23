@@ -7,12 +7,16 @@
   ];
   programs.fish = {
     enable = true;
+    functions = {
+      nix_run = ''nix run nixpkgs#$argv[1] -- $argv[2..]'';
+    };
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
       fish_add_path .local/bin/
       zoxide init fish | source
       abbr --add sg "${pkgs.shell_gpt}/bin/sgpt --repl temp --shell"
-      abbr --add ns "nix-shell --command fish -p"
+      abbr --add ns "nix shell nixpkgs#"
+      abbr --add nr "nix_run"
     '';
     plugins = [
       {

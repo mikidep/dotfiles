@@ -16,8 +16,15 @@
       url = "github:Mic92/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    kickstart-nix-nvim = {
-      url = "github:mrcjkb/kickstart-nix.nvim";
+    # kickstart-nix-nvim = {
+    #   url = "github:mrcjkb/kickstart-nix.nvim";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      # If you are not running an unstable channel of nixpkgs, select the corresponding branch of nixvim.
+      # url = "github:nix-community/nixvim/nixos-23.05";
+  
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -27,7 +34,7 @@
     home-manager,
     # eww,
     nix-index-database,
-    kickstart-nix-nvim,
+    nixvim,
     ...
   }: let
     system = "x86_64-linux";
@@ -38,7 +45,6 @@
       };
       overlays = [
         # eww.overlays.default
-        kickstart-nix-nvim.overlays.default
       ];
     };
   in {
@@ -51,6 +57,7 @@
         ./home.nix
         ./desktop.nix
         nix-index-database.hmModules.nix-index
+        nixvim.homeManagerModules.nixvim
       ];
 
       extraSpecialArgs = {

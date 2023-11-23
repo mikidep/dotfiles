@@ -36,7 +36,18 @@ in {
 
   services.blueman-applet.enable = true;
 
-  wayland.windowManager.hyprland = {
+  wayland.windowManager.hyprland = 
+      let
+        convert = "${pkgs.imagemagick}/bin/convert";
+        font = "${pkgs.iosevka}/share/fonts/truetype/iosevka-extendedmediumitalic.ttf";
+        bg = pkgs.runCommand "desktop-bg.png" {} ''
+          ${convert} -font ${font} \
+            -background black \
+            -fill white \
+            -pointsize 24 \
+            label:"oh no, not you again!" $out
+        '';
+        in {
     enable = true;
     enableNvidiaPatches = true;
     settings = {
@@ -50,27 +61,22 @@ in {
         ",preferred,auto,1"
       ];
 
+      animation = [
+        "fadeIn,0"
+      ];
+
       env = [
         "OZONE_PLATFORM,wayland"
         "NIXOS_OZONE_WL,1"
       ];
 
-      exec-once = let
-        convert = "${pkgs.imagemagick}/bin/convert";
-        font = "${pkgs.iosevka}/share/fonts/truetype/iosevka-extendedmediumitalic.ttf";
-        bg = pkgs.runCommand "desktop-bg.png" {} ''
-          ${convert} -font ${font} \
-            -background black \
-            -fill white \
-            -pointsize 24 \
-            label:"oh no, not you again!" $out
-        '';
-      in [
-        "swww init && swww img ${bg} --no-resize"
+      exec-once = [
+        "swww init && swww img ${bg} --no-resize -t none"
         "eww open bar"
       ];
 
       exec = [
+        "swww img ${bg} --no-resize -t none"
       ];
 
       input = {
