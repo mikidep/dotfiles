@@ -27,7 +27,8 @@ in {
     font-awesome
     (callPackage ./hyprshot.nix {})
     swww
-  ];
+    wl-clipboard
+];
 
   services.dunst = {
     enable = true;
@@ -61,17 +62,13 @@ in {
         ",preferred,auto,1"
       ];
 
-      animation = [
-        "fadeIn,0"
-      ];
-
       env = [
         "OZONE_PLATFORM,wayland"
         "NIXOS_OZONE_WL,1"
       ];
 
       exec-once = [
-        "swww init && swww img ${bg} --no-resize -t none"
+        "swww init"
         "eww open bar"
       ];
 
