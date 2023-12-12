@@ -26,6 +26,7 @@
       (agda.withPackages (p: [p.cubical p.standard-library]))
       stack
       nerdfonts
+      archivemount
       nnn
       trashy
 
@@ -37,10 +38,10 @@
       vlc
       jabref
       inkscape
-      #    openscad
       signal-desktop
       ffmpeg_6-full
       audacity
+      okular
 
       alsa-tools
       qpwgraph

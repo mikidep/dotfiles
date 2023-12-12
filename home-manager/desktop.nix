@@ -26,8 +26,8 @@ in {
     libnotify
     font-awesome
     (callPackage ./hyprshot.nix {})
-    swww
     wl-clipboard
+    feh
 ];
 
   services.dunst = {
@@ -37,8 +37,8 @@ in {
 
   services.blueman-applet.enable = true;
 
-  wayland.windowManager.hyprland = 
-      let
+
+  stylix.image = let
         convert = "${pkgs.imagemagick}/bin/convert";
         font = "${pkgs.iosevka}/share/fonts/truetype/iosevka-extendedmediumitalic.ttf";
         bg = pkgs.runCommand "desktop-bg.png" {} ''
@@ -46,9 +46,15 @@ in {
             -background black \
             -fill white \
             -pointsize 24 \
+            -size 1920x1080 \
+            -gravity center \
             label:"oh no, not you again!" $out
         '';
-        in {
+        in "${bg}";
+  stylix.polarity = "dark";
+  stylix.targets.feh.enable = true;
+
+  wayland.windowManager.hyprland = {
     enable = true;
     enableNvidiaPatches = true;
     settings = {
@@ -65,15 +71,15 @@ in {
       env = [
         "OZONE_PLATFORM,wayland"
         "NIXOS_OZONE_WL,1"
+        "QT_QPA_PLATFORMTHEME,qt5ct"
       ];
 
+
       exec-once = [
-        "swww init"
-        "eww open bar"
+        "ags"
       ];
 
       exec = [
-        "swww img ${bg} --no-resize -t none"
       ];
 
       input = {
@@ -146,34 +152,13 @@ in {
     };
   };
 
-  programs.eww = {
-    enable = true;
-    package = pkgs.eww-wayland;
-    configDir = pkgs.linkFarm "eww-config" [
-      {
-        name = "eww.yuck";
-        path =
-          templateFile
-          "eww.yuck"
-          ./eww-config/eww.yuck
-          {
-            hyprland-workspaces = let
-              hyprland-workspaces = pkgs.callPackage ./hyprland-workspaces.nix {};
-            in "${hyprland-workspaces}/bin/hyprland-workspaces";
-            jq = "${pkgs.jq}/bin/jq";
-            get-volume = "wpctl get-volume @DEFAULT_AUDIO_SINK@";
-            brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
-          };
-      }
-      {
-        name = "eww.scss";
-        path = ./eww-config/eww.scss;
-      }
-    ];
-  };
+  programs.ags.enable = true;
 
   xdg.enable = true;
-  # services.udiskie.enable = true;
+
+  xdg.configFile = {
+    # "wireplumber/bluetooth.lua.d/".text = "hello";
+  };
 
   xdg.desktopEntries.whatsapp = {
     type = "Application";

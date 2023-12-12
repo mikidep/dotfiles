@@ -2,7 +2,7 @@
   home.packages = with pkgs; [
     htop
     fortune
-    zoxide
+    # zoxide
     killall
   ];
   programs.fish = {
@@ -13,12 +13,22 @@
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
       fish_add_path .local/bin/
-      zoxide init fish | source
+      # zoxide init fish | source
       abbr --add sg "${pkgs.shell_gpt}/bin/sgpt --repl temp --shell"
-      abbr --add ns "nix shell nixpkgs#"
+      abbr --add ns --set-cursor "nix shell nixpkgs#%"
+      abbr --add nix-list --set-cursor 'find $(nix build nixpkgs#% --print-out-paths --no-link) -print0 | ${pkgs.nnn}/bin/nnn'
       abbr --add nr "nix_run"
     '';
     plugins = [
+      {
+        name = "z";
+        src = pkgs.fetchFromGitHub {
+          owner = "jethrokuan";
+          repo = "z";
+          rev = "85f863f";
+          sha256 = "sha256-+FUBM7CodtZrYKqU542fQD+ZDGrd2438trKM0tIESs0="; 
+         };
+      }
       {
         name = "nix-env.fish";
         src = pkgs.fetchFromGitHub {
