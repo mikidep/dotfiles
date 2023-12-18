@@ -3,7 +3,7 @@
   lib,
   ...
 }: {
-  home.packages = with pkgs; [swaybg sway-new-workspace];
+  home.packages = with pkgs; [swaybg];
 
   wayland.windowManager.sway = let
     rofi = "${pkgs.rofi-wayland}/bin/rofi";
@@ -43,27 +43,35 @@
             name = "Ctrl+Alt+${k}";
             value = v;
           })
-          {
-            "H" = "workspace prev_on_output";
-            "Left" = "workspace prev_on_output";
-            "L" = "workspace next_on_output";
-            "Right" = "workspace next_on_output";
-            "Shift+H" = "move container to workspace prev_on_output, workspace prev_on_output;";
-            "Shift+Left" = "move container to workspace prev_on_output, workspace prev_on_output;";
-            "Shift+L" = "move container to workspace next_on_output, workspace next_on_output;";
-            "Shift+Right" = "move container to workspace next_on_output, workspace next_on_output;";
-          }
-          // (let
-            unmute = "wpctl set-mute @DEFAULT_AUDIO_SINK@ 0";
-          in {
-            "Alt+F2" = "exec ${rofi-run}";
+          (
+            let
+              sway-nw = "${pkgs.sway-new-workspace}/bin/sway-new-workspace";
+            in {
+              "H" = "workspace prev_on_output";
+              "Left" = "workspace prev_on_output";
+              "L" = "workspace next_on_output";
+              "Right" = "workspace next_on_output";
+              "Shift+H" = "move container to workspace prev_on_output, workspace prev_on_output;";
+              "Shift+Left" = "move container to workspace prev_on_output, workspace prev_on_output;";
+              "Shift+L" = "move container to workspace next_on_output, workspace next_on_output;";
+              "Shift+Right" = "move container to workspace next_on_output, workspace next_on_output;";
+              "N" = "exec ${sway-nw} open";
+              "Shift+N" = "exec ${sway-nw} move";
+            }
+          )
+          // (
+            let
+              unmute = "wpctl set-mute @DEFAULT_AUDIO_SINK@ 0";
+            in {
+              "Alt+F2" = "exec ${rofi-run}";
 
-            "XF86AudioRaiseVolume" = "exec ${unmute}; wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+";
-            "XF86AudioLowerVolume" = "exec ${unmute}; wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%-";
-            "XF86MonBrightnessUp" = "exec ${pkgs.brightnessctl}/bin/brightnessctl s +10%";
-            "XF86MonBrightnessDown" = "exec ${pkgs.brightnessctl}/bin/brightnessctl s 10%-";
-            "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-          }));
+              "XF86AudioRaiseVolume" = "exec ${unmute}; wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+";
+              "XF86AudioLowerVolume" = "exec ${unmute}; wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%-";
+              "XF86MonBrightnessUp" = "exec ${pkgs.brightnessctl}/bin/brightnessctl s +10%";
+              "XF86MonBrightnessDown" = "exec ${pkgs.brightnessctl}/bin/brightnessctl s 10%-";
+              "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+            }
+          ));
     };
 
     extraConfig = ''
