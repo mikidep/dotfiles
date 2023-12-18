@@ -1386,7 +1386,8 @@
         "neovim-flake": "neovim-flake",
         "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs_3",
-        "stylix": "stylix"
+        "stylix": "stylix",
+        "sway-new-workspace": "sway-new-workspace"
       }
     },
     "rust-tools": {
@@ -1432,6 +1433,26 @@
       "original": {
         "owner": "danth",
         "repo": "stylix",
+        "type": "github"
+      }
+    },
+    "sway-new-workspace": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1702932315,
+        "narHash": "sha256-yAnt2kPVbV/h8I0qUTcDAES6V0GVX0bkcD7cYNORA+s=",
+        "owner": "mikidep",
+        "repo": "sway-new-workspace",
+        "rev": "4b9f13163316ff6224d64d30c282b3d4e11c1bf4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mikidep",
+        "repo": "sway-new-workspace",
         "type": "github"
       }
     },

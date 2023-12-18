@@ -3,7 +3,7 @@
   lib,
   ...
 }: {
-  home.packages = with pkgs; [swaybg];
+  home.packages = with pkgs; [swaybg sway-new-workspace];
 
   wayland.windowManager.sway = let
     rofi = "${pkgs.rofi-wayland}/bin/rofi";
@@ -14,7 +14,10 @@
     package = pkgs.swayfx;
 
     config = {
-      input."*".xkb_layout = "it";
+      input."*" = {
+        xkb_layout = "it";
+        xkb_numlock = "enabled";
+      };
 
       output = {
         "*" = {
@@ -50,9 +53,22 @@
             "Shift+L" = "move container to workspace next_on_output, workspace next_on_output;";
             "Shift+Right" = "move container to workspace next_on_output, workspace next_on_output;";
           }
-          // {
+          // (let
+            unmute = "wpctl set-mute @DEFAULT_AUDIO_SINK@ 0";
+          in {
             "Alt+F2" = "exec ${rofi-run}";
-          });
+
+            "XF86AudioRaiseVolume" = "exec ${unmute}; wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+";
+            "XF86AudioLowerVolume" = "exec ${unmute}; wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%-";
+            "XF86MonBrightnessUp" = "exec ${pkgs.brightnessctl}/bin/brightnessctl s +10%";
+            "XF86MonBrightnessDown" = "exec ${pkgs.brightnessctl}/bin/brightnessctl s 10%-";
+            "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+          }));
     };
+
+    extraConfig = ''
+      bindswitch lid:on output eDP-1 disable
+      bindswitch lid:off output eDP-1 enable
+    '';
   };
 }

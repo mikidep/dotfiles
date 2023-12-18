@@ -19,6 +19,10 @@
       url = "github:Aylur/ags";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    sway-new-workspace = {
+      url = "github:mikidep/sway-new-workspace";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     stylix.url = "github:danth/stylix";
     stylix.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -57,6 +61,13 @@
             {home.packages = [neovim-flake.packages.${system}.lazy];}
             nix-index-database.hmModules.nix-index
             ags.homeManagerModules.default
+            {
+              nixpkgs.overlays = [
+                (_: _: {
+                  sway-new-workspace = sway-new-workspace.packages.${system}.default;
+                })
+              ];
+            }
           ];
         }
       ];
