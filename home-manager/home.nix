@@ -12,15 +12,12 @@
   home.username = "mikidep";
   home.homeDirectory = "/home/mikidep";
 
+  nixpkgs.config = {
+    allowUnfree = true;
+  };
+
   # Packages that should be installed to the user profile.
   home.packages = let
-    #    astapkgs = pkgs.fetchFromGitHub {
-    #      owner = "Astavie";
-    #      repo = "astapkgs";
-    #      rev = "9443cc9";
-    #      hash = "sha256-Lv5JtokxtOv8Jud9nZgyPY5WC5DVqSdOh1GbkBZIPzk=";
-    #    };
-    #    discord-screenaudio = pkgs.qt6Packages.callPackage "${astapkgs}/discord-screenaudio.nix" {};
   in
     with pkgs; [
       (agda.withPackages (p: [p.cubical p.standard-library]))
@@ -46,7 +43,6 @@
       alsa-tools
       qpwgraph
       reaper
-      #     discord-screenaudio
     ];
 
   fonts.fontconfig.enable = true;

@@ -4,7 +4,6 @@
 {
   config,
   pkgs,
-  unstable,
   ...
 }: {
   imports = [
@@ -15,7 +14,9 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
+  boot.loader.systemd-boot.configurationLimit = 5;
+  boot.plymouth.enable = true;
+  boot.kernel.sysctl."vm.max_map_count" = 262144;
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -74,7 +75,8 @@
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+          # command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd sway";
           user = "greeter";
         };
       };
@@ -225,10 +227,17 @@
 
   services.upower.enable = true;
 
-  virtualisation.docker.enable = true;
+  virtualisation.docker = {
+    enable = true;
+    enableOnBoot = false;
+    daemon.settings.default-ulimits.nofile = {
+      Hard = 65536;
+      Name = "nofile";
+      Soft = 65536;
+    };
+  };
 
-
-# List services that you want to enable:
+  # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;

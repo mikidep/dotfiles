@@ -11,19 +11,24 @@
       url = "github:Mic92/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixvim = {
-      url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # nixvim = {
+    #   url = "github:nix-community/nixvim";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
     ags = {
       url = "github:Aylur/ags";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     stylix.url = "github:danth/stylix";
     stylix.inputs.nixpkgs.follows = "nixpkgs";
+
+    neovim-flake = {
+      url = "github:cwfryer/neovim-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{
+  outputs = inputs @ {
     self,
     nixpkgs,
     musnix,
@@ -42,17 +47,15 @@
       modules = [
         musnix.nixosModules.musnix
         home-manager.nixosModules.home-manager
-        ./configuration.nix
+        ./nixos/configuration.nix
         {
-          home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit inputs; };
           home-manager.users.mikidep.imports = with inputs; [
-            ../home-manager/home.nix
-            ../home-manager/desktop.nix
-            stylix.homeManagerModules.stylix
+            ./home-manager/home.nix
+            ./home-manager/desktop.nix
+            # stylix.homeManagerModules.stylix
+            {home.packages = [neovim-flake.packages.${system}.lazy];}
             nix-index-database.hmModules.nix-index
-            nixvim.homeManagerModules.nixvim
             ags.homeManagerModules.default
           ];
         }
