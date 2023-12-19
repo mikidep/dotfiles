@@ -8,11 +8,36 @@
         -fill white \
         -pointsize 24 \
         -gravity center \
+        -size 1920x1080 \
         label:"oh no, not you again!" $out
     '';
   in "${bg}";
 in {
+  # stylix = {
+  #   image = bg;
+  #   polarity = "dark";
+  #   targets.kitty.enable = false;
+  # };
+
   imports = [
     (import ./sway.nix {inherit bg;})
   ];
+
+  xdg.enable = true;
+
+  xdg.configFile = {
+    # "wireplumber/bluetooth.lua.d/".text = "hello";
+  };
+
+  xdg.desktopEntries.whatsapp = {
+    type = "Application";
+    name = "WhatsApp";
+    comment = "Launch WhatsApp";
+    icon = pkgs.fetchurl {
+      url = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/240px-WhatsApp.svg.png";
+      hash = "sha256-ZbTuq5taAsRvdfJqvqw8cqR5z4/Ogpt/nEb1npp/l4U=";
+    };
+    exec = ''${pkgs.chromium}/bin/chromium --app="https://web.whatsapp.com/"'';
+    terminal = false;
+  };
 }

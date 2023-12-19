@@ -5,6 +5,15 @@
 }: {
   home.packages = with pkgs; [swaybg];
 
+  programs.wezterm = {
+    enable = true;
+    extraConfig = ''
+      local config = {}
+      config.enable_tab_bar = false
+      return config
+    '';
+  };
+
   wayland.windowManager.sway = let
     rofi = "${pkgs.rofi-wayland}/bin/rofi";
     rofi-menu = ''${rofi} -show combi -combi-modes "window,drun" -show-icons -theme solarized'';
@@ -19,14 +28,14 @@
         xkb_numlock = "enabled";
       };
 
-      output = {
-        "*" = {
-          bg = "${bg} center #000000";
-        };
-      };
+      # output = {
+      #   "*" = {
+      #     bg = "${bg} center #000000";
+      #   };
+      # };
 
       window.titlebar = false;
-      terminal = "kitty";
+      terminal = "wezterm";
       menu = rofi-menu;
       modifier = "Mod4";
 
@@ -34,6 +43,11 @@
         inner = 3;
         smartGaps = true;
         smartBorders = "on";
+      };
+
+      focus = {
+        followMouse = false;
+        newWindow = "urgent";
       };
 
       keybindings =
