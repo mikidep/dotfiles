@@ -18,9 +18,38 @@
     rofi = "${pkgs.rofi-wayland}/bin/rofi";
     rofi-menu = ''${rofi} -show combi -combi-modes "window,drun" -show-icons -theme solarized'';
     rofi-run = ''${rofi} -show run -theme solarized'';
+    dbus-sway-environment =
+      pkgs.writeShellScript "dbus-sway-environment"
+      ''
+        dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+        systemctl --user stop pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
+        systemctl --user start pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
+      '';
+
+    # currently, there is some friction between sway and gtk:
+    # https://github.com/swaywm/sway/wiki/GTK-3-settings-on-Wayland
+    # the suggested way to set gtk settings is with gsettings
+    # for gsettings to work, we need to tell it where the schemas are
+    # using the XDG_DATA_DIR environment variable
+    # run at the end of sway config
+    configure-gtk =
+      pkgs.writeShellScript
+      "configure-gtk"
+      (
+        let
+          schema = pkgs.gsettings-desktop-schemas;
+          datadir = "${schema}/share/gsettings-schemas/${schema.name}";
+        in ''
+          export XDG_DATA_DIRS=${datadir}:$XDG_DATA_DIRS
+          gnome_schema=org.gnome.desktop.interface
+          gsettings set $gnome_schema gtk-theme 'Dracula'
+        ''
+      );
   in {
     enable = true;
     package = pkgs.swayfx;
+
+    systemd.enable = true;
 
     config = {
       input."*" = {
@@ -28,11 +57,11 @@
         xkb_numlock = "enabled";
       };
 
-      # output = {
-      #   "*" = {
-      #     bg = "${bg} center #000000";
-      #   };
-      # };
+      output = {
+        "*" = {
+          bg = "${bg} center #000000";
+        };
+      };
 
       window.titlebar = false;
       terminal = "wezterm";
@@ -86,11 +115,32 @@
               "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
             }
           ));
+      floating.criteria = [
+        # {
+        #   title = "^$";
+        #   app_id = "^$";
+        # }
+      ];
     };
 
-    extraConfig = ''
+    extraConfig = let
+      launch = "${pkgs.xdg-launch}/bin/xdg-launch";
+    in ''
+      exec ${dbus-sway-environment}
+      exec ${configure-gtk}
+
       bindswitch lid:on output eDP-1 disable
       bindswitch lid:off output eDP-1 enable
+
+      for_window [app_id="^$" title="^$"] floating enable; move position 1800 px 960 px
+
+      workspace number 1
+      exec firefox
+      workspace number 2
+      exec wezterm
+      workspace number 9
+      exec org.telegram.desktop
+      exec ${launch} whatsapp
     '';
   };
 }

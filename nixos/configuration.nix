@@ -100,12 +100,15 @@
     };
   };
 
+  security.polkit.enable = true;
+
   # Configure console keymap
   console.keyMap = "it";
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
+      xdg-desktop-portal-wlr
     ];
   };
 
