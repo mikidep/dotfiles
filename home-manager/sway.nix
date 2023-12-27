@@ -5,11 +5,28 @@
 }: {
   home.packages = with pkgs; [swaybg];
 
+  services.mako = {
+    enable = true;
+    anchor = "bottom-right";
+    defaultTimeout = 2000;
+    groupBy = "app-icon";
+  };
+
   programs.wezterm = {
     enable = true;
     extraConfig = ''
       local config = {}
+      config.window_decorations = "RESIZE"
       config.enable_tab_bar = false
+      config.font_size = 12
+      config.window_padding = {
+        left = "2pt", 
+        right = "2pt", 
+        top = 0, 
+        bottom = 0, 
+      }
+      config.adjust_window_size_when_changing_font_size = false
+      -- config.use_resize_increments = true
       return config
     '';
   };
@@ -45,6 +62,23 @@
           gsettings set $gnome_schema gtk-theme 'Dracula'
         ''
       );
+
+    move-to = let
+      wef-dotfiles =
+        pkgs.fetchFromGitLab
+        {
+          owner = "wef";
+          repo = "dotfiles";
+          rev = "7e72b4da";
+          hash = "sha256-7TEy0rNvMtZ3C8K/46klpBmXyiDbrM0GR4AYuTheI8g=";
+        };
+      wrapped = pkgs.symlinkJoin {
+        name = "wef-dotfiles-i3-move-to";
+        paths = [wef-dotfiles pkgs.jq];
+        buildInputs = [pkgs.makeWrapper];
+        postBuild = "wrapProgram $out/bin/i3-move-to --prefix PATH : $out/bin";
+      };
+    in "${wrapped}/bin/i3-move-to";
   in {
     enable = true;
     package = pkgs.swayfx;
@@ -131,8 +165,6 @@
 
       bindswitch lid:on output eDP-1 disable
       bindswitch lid:off output eDP-1 enable
-
-      for_window [app_id="^$" title="^$"] floating enable; move position 1800 px 960 px
 
       workspace number 1
       exec firefox

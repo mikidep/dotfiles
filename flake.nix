@@ -11,10 +11,10 @@
       url = "github:Mic92/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # nixvim = {
-    #   url = "github:nix-community/nixvim";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     ags = {
       url = "github:Aylur/ags";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -58,9 +58,10 @@
             ./home-manager/home.nix
             ./home-manager/desktop.nix
             # stylix.homeManagerModules.stylix
-            {home.packages = [neovim-flake.packages.${system}.lazy];}
             nix-index-database.hmModules.nix-index
-            ags.homeManagerModules.default
+            # neovim-flake.nixosModules.${system}.hm
+            # ags.homeManagerModules.default
+            nixvim.homeManagerModules.nixvim
             {
               nixpkgs.overlays = [
                 (_: _: {
