@@ -17,8 +17,7 @@
   };
 
   # Packages that should be installed to the user profile.
-  home.packages = let
-  in
+  home.packages = 
     with pkgs; [
       (agda.withPackages (p: [p.cubical p.standard-library]))
       stack
@@ -43,7 +42,9 @@
       alsa-tools
       qpwgraph
       reaper
+      davinci-resolve
     ];
+
 
   fonts.fontconfig.enable = true;
 
