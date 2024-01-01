@@ -1,4 +1,7 @@
 {pkgs, ...}: {
+  home.packages = with pkgs; [
+    ripgrep
+  ];
   programs.nixvim = {
     enable = true;
     colorschemes.tokyonight.enable = true;
@@ -23,6 +26,25 @@
       };
       telescope.enable = true;
       which-key.enable = true;
+      lsp-format.enable = true;
+      lsp = {
+        enable = true;
+        servers = {
+          nil_ls = {
+            enable = true;
+            cmd = ["${pkgs.nil}/bin/nil"];
+            extraOptions = {
+              formatting = {
+                command = ["${pkgs.alejandra}/bin/alejandra"];
+              };
+            };
+          };
+          lua-ls = {
+            enable = true;
+            cmd = ["${pkgs.lua-language-server}/bin/lua-language-server"];
+          };
+        };
+      };
     };
     extraPlugins = with pkgs.vimPlugins; [
       nvim-lspconfig
@@ -33,6 +55,7 @@
       expandtab = true;
       shiftwidth = 2;
       tabstop = 2;
+      smartindent = true;
       number = true;
       relativenumber = true;
       wrap = false;
@@ -82,6 +105,26 @@
             key = "ca";
             action = ''vim.lsp.buf.code_action'';
             lua = true;
+          }
+          {
+            key = " ";
+            action = ''<cmd>Telescope find_files<CR>'';
+          }
+          {
+            key = ",";
+            action = ''<cmd>Telescope buffers<CR>'';
+          }
+          {
+            key = "f";
+            action = ''<cmd>Telescope live_grep<CR>'';
+          }
+          {
+            key = ":";
+            action = ''<cmd>Telescope commands<CR>'';
+          }
+          {
+            key = "qq";
+            action = ''<cmd>qa<CR>'';
           }
         ];
     in
