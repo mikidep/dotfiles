@@ -1,8 +1,5 @@
 {pkgs, ...}: {
-  home.packages = with pkgs; [
-    nil
-  ];
-  programs.nixvim = {
+    programs.nixvim = {
     enable = true;
     colorschemes.tokyonight.enable = true;
     clipboard.providers.wl-copy.enable = true;
@@ -17,32 +14,25 @@
       nvim-lspconfig
     ];
     globals.mapleader = "<space>";
-    keymaps = [
-      {
-        mode = "n";
-        key = "<leader>cf";
-        lua = true;
-        action = ''
-          (function()
-                   vim.lsp.buf.format { async = true }
-                 end)
-        '';
-      }
-    ];
-    extraConfigLua = ''
-      local lspconfig = require("lspconfig")
-
-      lspconfig.nil_ls.setup {
-        autostart = true,
-        cmd = { "nil" },
-        settings = {
-          ['nil'] = {
-            formatting = {
-              command = { "${pkgs.alejandra}/bin/alejandra" },
-            },
-          },
-        },
-      }
-    '';
+    options = {
+      expandtab = true;
+      shiftwidth = 2;
+      tabstop = 2;
+      number = true;
+      relativenumber = true;
+    };
+    extraConfigLua = with builtins;
+      replaceStrings
+      [
+        "@alejandra@"
+        "@nil@"
+        "@lua-language-server@"
+      ]
+      [
+        "${pkgs.alejandra}/bin/alejandra"
+        "${pkgs.nil}/bin/nil"
+        "${pkgs.lua-language-server}/bin/lua-language-server"
+      ]
+      (readFile ./nvim-extraconfig.lua);
   };
 }

@@ -9,6 +9,8 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ./prime.nix
+    ./docker.nix
   ];
 
   # Bootloader.
@@ -16,7 +18,6 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.configurationLimit = 5;
   boot.plymouth.enable = true;
-  boot.kernel.sysctl."vm.max_map_count" = 262144;
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -83,7 +84,7 @@
     };
 
     # Load nvidia driver for Xorg and Wayland
-    # services.xserver.videoDrivers = [ "nvidia" ];
+    # xserver.videoDrivers = ["nvidia"];
 
     blueman.enable = true;
     pipewire = {
@@ -156,6 +157,9 @@
     enable = true;
     driSupport = true;
     driSupport32Bit = true;
+    extraPackages = with pkgs; [
+      rocmPackages.clr.icd
+    ];
   };
 
   hardware.nvidia = {
@@ -228,16 +232,6 @@
   ];
 
   services.upower.enable = true;
-
-  virtualisation.docker = {
-    enable = true;
-    enableOnBoot = false;
-    daemon.settings.default-ulimits.nofile = {
-      Hard = 65536;
-      Name = "nofile";
-      Soft = 65536;
-    };
-  };
 
   # List services that you want to enable:
 
