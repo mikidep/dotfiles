@@ -15,3 +15,6 @@ lspconfig.nil_ls.setup {
 lspconfig.lua_ls.setup {
   cmd = { "@lua-language-server@" },
 }
+
+
+require("nvfs-keymaps")

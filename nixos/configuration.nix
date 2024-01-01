@@ -102,6 +102,9 @@
   };
 
   security.polkit.enable = true;
+  security.sudo.extraConfig = ''
+    Defaults timestamp_timeout=60
+  '';
 
   # Configure console keymap
   console.keyMap = "it";
