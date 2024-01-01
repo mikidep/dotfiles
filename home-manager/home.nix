@@ -17,34 +17,32 @@
   };
 
   # Packages that should be installed to the user profile.
-  home.packages = 
-    with pkgs; [
-      (agda.withPackages (p: [p.cubical p.standard-library]))
-      stack
-      nerdfonts
-      archivemount
-      nnn
-      trashy
+  home.packages = with pkgs; [
+    (agda.withPackages (p: [p.cubical p.standard-library]))
+    stack
+    nerdfonts
+    archivemount
+    nnn
+    trashy
 
-      firefox
-      chromium
-      # discord
-      telegram-desktop
-      gimp
-      vlc
-      jabref
-      inkscape
-      signal-desktop
-      ffmpeg_6-full
-      audacity
-      okular
+    firefox
+    chromium
+    # discord
+    telegram-desktop
+    gimp
+    vlc
+    jabref
+    inkscape
+    signal-desktop
+    ffmpeg_6-full
+    audacity
+    okular
 
-      alsa-tools
-      qpwgraph
-      reaper
-      davinci-resolve
-    ];
-
+    alsa-tools
+    qpwgraph
+    reaper
+    davinci-resolve
+  ];
 
   fonts.fontconfig.enable = true;
 

@@ -16,12 +16,17 @@
           end
         '';
       };
-      treesitter.enable = true;
+      treesitter = {
+        enable = true;
+        indent = true;
+        incrementalSelection.enable = true;
+      };
       telescope.enable = true;
       which-key.enable = true;
     };
     extraPlugins = with pkgs.vimPlugins; [
       nvim-lspconfig
+      hydra-nvim
     ];
     globals.mapleader = " ";
     options = {
@@ -31,6 +36,7 @@
       number = true;
       relativenumber = true;
       wrap = false;
+      timeoutlen = 50;
     };
     extraFiles = let
       nvfs = pkgs.fetchFromGitHub {
