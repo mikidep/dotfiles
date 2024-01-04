@@ -1,6 +1,7 @@
-{bg, ...}: {
+{
   pkgs,
   lib,
+  bg,
   ...
 }: {
   home.packages = with pkgs; [swaybg];

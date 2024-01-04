@@ -20,24 +20,26 @@ in {
   # };
 
   imports = [
-    (import ./sway.nix {inherit bg;})
+    ./sway.nix
   ];
+  _module.args = {inherit bg;};
+  xdg = {
+    enable = true;
 
-  xdg.enable = true;
-
-  xdg.configFile = {
-    # "wireplumber/bluetooth.lua.d/".text = "hello";
-  };
-
-  xdg.desktopEntries.whatsapp = {
-    type = "Application";
-    name = "WhatsApp";
-    comment = "Launch WhatsApp";
-    icon = pkgs.fetchurl {
-      url = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/240px-WhatsApp.svg.png";
-      hash = "sha256-ZbTuq5taAsRvdfJqvqw8cqR5z4/Ogpt/nEb1npp/l4U=";
+    configFile = {
+      # "wireplumber/bluetooth.lua.d/".text = "hello";
     };
-    exec = ''${pkgs.chromium}/bin/chromium --app="https://web.whatsapp.com/"'';
-    terminal = false;
+
+    desktopEntries.whatsapp = {
+      type = "Application";
+      name = "WhatsApp";
+      comment = "Launch WhatsApp";
+      icon = pkgs.fetchurl {
+        url = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/240px-WhatsApp.svg.png";
+        hash = "sha256-ZbTuq5taAsRvdfJqvqw8cqR5z4/Ogpt/nEb1npp/l4U=";
+      };
+      exec = ''${pkgs.chromium}/bin/chromium --app="https://web.whatsapp.com/"'';
+      terminal = false;
+    };
   };
 }

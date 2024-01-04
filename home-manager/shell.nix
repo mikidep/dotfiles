@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
     htop
     fortune
@@ -26,8 +26,8 @@
           owner = "jethrokuan";
           repo = "z";
           rev = "85f863f";
-          sha256 = "sha256-+FUBM7CodtZrYKqU542fQD+ZDGrd2438trKM0tIESs0="; 
-         };
+          sha256 = "sha256-+FUBM7CodtZrYKqU542fQD+ZDGrd2438trKM0tIESs0=";
+        };
       }
       {
         name = "nix-env.fish";
@@ -45,7 +45,7 @@
 
     functions = {
       fish_user_key_bindings = ''
-      
+
       '';
     };
   };
