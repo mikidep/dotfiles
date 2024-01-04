@@ -20,10 +20,10 @@
       config.enable_tab_bar = false
       config.font_size = 12
       config.window_padding = {
-        left = "2pt", 
-        right = "2pt", 
-        top = 0, 
-        bottom = 0, 
+        left = "2pt",
+        right = "2pt",
+        top = 0,
+        bottom = 0,
       }
       config.adjust_window_size_when_changing_font_size = false
       -- config.use_resize_increments = true
@@ -62,23 +62,6 @@
           gsettings set $gnome_schema gtk-theme 'Dracula'
         ''
       );
-
-    move-to = let
-      wef-dotfiles =
-        pkgs.fetchFromGitLab
-        {
-          owner = "wef";
-          repo = "dotfiles";
-          rev = "7e72b4da";
-          hash = "sha256-7TEy0rNvMtZ3C8K/46klpBmXyiDbrM0GR4AYuTheI8g=";
-        };
-      wrapped = pkgs.symlinkJoin {
-        name = "wef-dotfiles-i3-move-to";
-        paths = [wef-dotfiles pkgs.jq];
-        buildInputs = [pkgs.makeWrapper];
-        postBuild = "wrapProgram $out/bin/i3-move-to --prefix PATH : $out/bin";
-      };
-    in "${wrapped}/bin/i3-move-to";
   in {
     enable = true;
     package = pkgs.swayfx;
@@ -149,12 +132,6 @@
               "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
             }
           ));
-      floating.criteria = [
-        # {
-        #   title = "^$";
-        #   app_id = "^$";
-        # }
-      ];
     };
 
     extraConfig = let

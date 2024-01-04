@@ -12,11 +12,12 @@
     ./prime.nix
     ./docker.nix
   ];
-
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.systemd-boot.configurationLimit = 5;
+  boot.loader = {
+    # Bootloader.
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+    systemd-boot.configurationLimit = 5;
+  };
   boot.plymouth.enable = true;
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -46,8 +47,131 @@
     LC_TIME = "et_EE.UTF-8";
   };
 
-  hardware.bluetooth.enable = true;
+  # Configure console keymap
+  console.keyMap = "it";
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-wlr
+    ];
+  };
+
+  programs = {
+    adb.enable = true;
+
+    hyprland = {
+      enable = true;
+      xwayland.enable = true;
+    };
+
+    # Some programs need SUID wrappers, can be configured further or are
+    # started in user sessions.
+    # programs.mtr.enable = true;
+    # programs.gnupg.agent = {
+    #   enable = true;
+    #   enableSSHSupport = true;
+    # };
+
+    fish.enable = true;
+  };
+  hardware = {
+    bluetooth.enable = true;
+    opengl = {
+      # Enable OpenGL
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+      extraPackages = with pkgs; [
+        rocmPackages.clr.icd
+      ];
+    };
+
+    nvidia = {
+      # Modesetting is required.
+      modesetting.enable = true;
+
+      # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
+      powerManagement.enable = false;
+      # Fine-grained power management. Turns off GPU when not in use.
+      # Experimental and only works on modern Nvidia GPUs (Turing or newer).
+      powerManagement.finegrained = false;
+
+      # Use the NVidia open source kernel module (not to be confused with the
+      # independent third-party "nouveau" open source driver).
+      # Support is limited to the Turing and later architectures. Full list of
+      # supported GPUs is at:
+      # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
+      # Only available from driver 515.43.04+
+      # Do not disable this unless your GPU is unsupported or if you have a good reason to.
+      open = true;
+
+      # Enable the Nvidia settings menu,
+      # accessible via `nvidia-settings`.
+      nvidiaSettings = true;
+
+      # Optionally, you may need to select the appropriate driver version for your specific GPU.
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+    };
+  };
+
+  # Enable sound with pipewire.
+  sound.enable = true;
+  security = {
+    polkit.enable = true;
+    sudo.extraConfig = ''
+      Defaults timestamp_timeout=60
+    '';
+    rtkit.enable = true;
+  };
+
+  musnix.enable = true;
+
+  # Enable touchpad support (enabled default in most desktopManager).
+  # services.xserver.libinput.enable = true;
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.mikidep = {
+    isNormalUser = true;
+    description = "Michele De Pascalis";
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "adbusers"
+      "audio"
+      "dialout"
+      "docker"
+    ];
+    shell = pkgs.fish;
+  };
+
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+
+  nix = {
+    package = pkgs.nixFlakes;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
+  };
+  environment = {
+    sessionVariables = {
+      # If your cursor becomes invisible
+      WLR_NO_HARDWARE_CURSORS = "1";
+      # Hint electron apps to use wayland
+      NIXOS_OZONE_WL = "1";
+    };
+
+    shells = with pkgs; [zsh fish];
+
+    # List packages installed in system profile. To search, run:
+    # $ nix search wget
+    systemPackages = with pkgs; [
+      vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    ];
+  };
   services = {
+    # List services that you want to enable:
     # Enable the X11 windowing system.
     # services.xserver.enable = true;
     flatpak.enable = true;
@@ -99,144 +223,9 @@
       # no need to redefine it in your config for now)
       #media-session.enable = true;
     };
+
+    upower.enable = true;
   };
-
-  security.polkit.enable = true;
-  security.sudo.extraConfig = ''
-    Defaults timestamp_timeout=60
-  '';
-
-  # Configure console keymap
-  console.keyMap = "it";
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-      xdg-desktop-portal-wlr
-    ];
-  };
-
-  programs = {
-    adb.enable = true;
-
-    hyprland = {
-      enable = true;
-      xwayland.enable = true;
-    };
-
-    regreet = {
-      enable = false;
-      settings = {
-        background.path = let
-          bg = pkgs.runCommand "regreet-bg" {} ''
-            mkdir $out
-            ${pkgs.imagemagick}/bin/magick -size 1920x1080 xc:black $out/bg.png
-          '';
-        in "${bg}/bg.png";
-        GTK.application_prefer_dark_theme = true;
-      };
-    };
-
-    # Some programs need SUID wrappers, can be configured further or are
-    # started in user sessions.
-    # programs.mtr.enable = true;
-    # programs.gnupg.agent = {
-    #   enable = true;
-    #   enableSSHSupport = true;
-    # };
-
-    fish.enable = true;
-  };
-
-  environment.sessionVariables = {
-    # If your cursor becomes invisible
-    WLR_NO_HARDWARE_CURSORS = "1";
-    # Hint electron apps to use wayland
-    NIXOS_OZONE_WL = "1";
-  };
-
-  # Enable OpenGL
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-    extraPackages = with pkgs; [
-      rocmPackages.clr.icd
-    ];
-  };
-
-  hardware.nvidia = {
-    # Modesetting is required.
-    modesetting.enable = true;
-
-    # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
-    powerManagement.enable = false;
-    # Fine-grained power management. Turns off GPU when not in use.
-    # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    powerManagement.finegrained = false;
-
-    # Use the NVidia open source kernel module (not to be confused with the
-    # independent third-party "nouveau" open source driver).
-    # Support is limited to the Turing and later architectures. Full list of
-    # supported GPUs is at:
-    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
-    # Only available from driver 515.43.04+
-    # Do not disable this unless your GPU is unsupported or if you have a good reason to.
-    open = true;
-
-    # Enable the Nvidia settings menu,
-    # accessible via `nvidia-settings`.
-    nvidiaSettings = true;
-
-    # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-  };
-
-  # Enable sound with pipewire.
-  sound.enable = true;
-  security.rtkit.enable = true;
-
-  musnix.enable = true;
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.mikidep = {
-    isNormalUser = true;
-    description = "Michele De Pascalis";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "adbusers"
-      "audio"
-      "dialout"
-      "docker"
-    ];
-    shell = pkgs.fish;
-  };
-
-  environment.shells = with pkgs; [zsh fish];
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  nix = {
-    package = pkgs.nixFlakes;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
-  };
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  ];
-
-  services.upower.enable = true;
-
-  # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;

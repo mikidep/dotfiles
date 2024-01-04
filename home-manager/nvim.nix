@@ -7,6 +7,7 @@
     colorschemes.tokyonight.enable = true;
     clipboard.providers.wl-copy.enable = true;
     plugins = {
+      auto-session.enable = true;
       noice.enable = true;
       neo-tree = {
         enable = true;
@@ -26,18 +27,22 @@
       };
       telescope.enable = true;
       which-key.enable = true;
-      lsp-format.enable = true;
+      nvim-cmp = {
+        enable = true;
+        mappingPresets = ["insert"];
+      };
+      cmp-vim-lsp.enable = true;
+      lsp-format = {
+        enable = true;
+        lspServersToEnable = "all";
+      };
       lsp = {
         enable = true;
         servers = {
           nil_ls = {
             enable = true;
             cmd = ["${pkgs.nil}/bin/nil"];
-            extraOptions = {
-              formatting = {
-                command = ["${pkgs.alejandra}/bin/alejandra"];
-              };
-            };
+            settings.formatting.command = ["${pkgs.alejandra}/bin/alejandra"];
           };
           lua-ls = {
             enable = true;
@@ -47,8 +52,8 @@
       };
     };
     extraPlugins = with pkgs.vimPlugins; [
-      nvim-lspconfig
       hydra-nvim
+      playground # treesitter playground
     ];
     globals.mapleader = " ";
     options = {
