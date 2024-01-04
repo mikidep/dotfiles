@@ -9,7 +9,7 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ./prime.nix
+    # ./prime.nix
     ./docker.nix
   ];
   boot.loader = {

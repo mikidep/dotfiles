@@ -1,4 +1,5 @@
 {
+  options,
   pkgs,
   lib,
   bg,
@@ -85,6 +86,16 @@
       terminal = "wezterm";
       menu = rofi-menu;
       modifier = "Mod4";
+
+      bars = [
+        {
+          fonts = {
+            names = ["Monospace"];
+            size = 12.0;
+          };
+          statusCommand = "${pkgs.i3status}/bin/i3status";
+        }
+      ];
 
       gaps = {
         inner = 3;
