@@ -1,5 +1,4 @@
 {
-  options,
   pkgs,
   lib,
   bg,
@@ -70,47 +69,50 @@
 
     systemd.enable = true;
 
-    config = {
-      input."*" = {
-        xkb_layout = "it";
-        xkb_numlock = "enabled";
-      };
+    config = {...}: {
+      config = {
+        input."*" = {
+          xkb_layout = "it";
+          xkb_numlock = "enabled";
+        };
 
-      output = {
-        "*" = {
-          bg = "${bg} center #000000";
+        output = {
+          "*" = {
+            bg = "${bg} center #000000";
+          };
+        };
+
+        window.titlebar = false;
+        terminal = "wezterm";
+        menu = rofi-menu;
+        modifier = "Mod4";
+
+        bars = [
+          {
+            fonts = {
+              names = ["Monospace"];
+              size = 12.0;
+            };
+            statusCommand = "${pkgs.i3status}/bin/i3status";
+          }
+        ];
+
+        gaps = {
+          inner = 3;
+          smartGaps = true;
+          smartBorders = "on";
+        };
+
+        focus = {
+          followMouse = false;
+          newWindow = "urgent";
         };
       };
-
-      window.titlebar = false;
-      terminal = "wezterm";
-      menu = rofi-menu;
-      modifier = "Mod4";
-
-      bars = [
-        {
-          fonts = {
-            names = ["Monospace"];
-            size = 12.0;
-          };
-          statusCommand = "${pkgs.i3status}/bin/i3status";
-        }
-      ];
-
-      gaps = {
-        inner = 3;
-        smartGaps = true;
-        smartBorders = "on";
-      };
-
-      focus = {
-        followMouse = false;
-        newWindow = "urgent";
-      };
-
-      keybindings =
-        lib.mkOptionDefault
-        (lib.attrsets.mapAttrs'
+      options.keybindings = lib.mkOption {
+        # This is quite cursed. See https://github.com/NixOS/nixpkgs/issues/16884
+        apply = defaultKb:
+          defaultKb
+          // lib.attrsets.mapAttrs'
           (k: v: {
             name = "Ctrl+Alt+${k}";
             value = v;
@@ -136,6 +138,7 @@
               unmute = "wpctl set-mute @DEFAULT_AUDIO_SINK@ 0";
             in {
               "Alt+F2" = "exec ${rofi-run}";
+              "Mod4+space" = "exec ${rofi-menu}";
 
               "XF86AudioRaiseVolume" = "exec ${unmute}; exec wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+";
               "XF86AudioLowerVolume" = "exec ${unmute}; exec wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%-";
@@ -143,7 +146,8 @@
               "XF86MonBrightnessDown" = "exec ${pkgs.brightnessctl}/bin/brightnessctl s 10%-";
               "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
             }
-          ));
+          );
+      };
     };
 
     extraConfig = let

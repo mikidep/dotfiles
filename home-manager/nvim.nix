@@ -5,7 +5,6 @@
   programs.nixvim = {
     enable = true;
     colorschemes.tokyonight.enable = true;
-    clipboard.providers.wl-copy.enable = true;
     plugins = {
       auto-session.enable = true;
       noice.enable = true;
@@ -28,10 +27,10 @@
       telescope.enable = true;
       which-key.enable = true;
       nvim-cmp = {
-        enable = true;
+        enable = false;
         mappingPresets = ["insert"];
       };
-      cmp-vim-lsp.enable = true;
+      cmp-vim-lsp.enable = false;
       lsp-format = {
         enable = true;
         lspServersToEnable = "all";
@@ -55,6 +54,10 @@
       hydra-nvim
       playground # treesitter playground
     ];
+    clipboard = {
+      providers.wl-copy.enable = true;
+      register = "unnamedplus";
+    };
     globals.mapleader = " ";
     options = {
       expandtab = true;
@@ -76,19 +79,11 @@
     in {
       "lua/nvfs-keymaps.lua" = builtins.readFile "${nvfs}/lua/user/keymaps.lua";
     };
-    extraConfigLua = with builtins;
-      replaceStrings
-      [
-        "@alejandra@"
-        "@nil@"
-        "@lua-language-server@"
-      ]
-      [
-        "${pkgs.alejandra}/bin/alejandra"
-        "${pkgs.nil}/bin/nil"
-        "${pkgs.lua-language-server}/bin/lua-language-server"
-      ]
-      (readFile ./nvim-extraconfig.lua);
+    extraConfigLuaPre = ''
+      vim.cmd [[redir! > vim_log.txt]]
+      vim.cmd [[echom "Test Message"]]
+    '';
+    extraConfigLua = with builtins; readFile ./nvim-extraconfig.lua;
     keymaps = let
       leaderkm =
         map (km: km // {key = "<leader>" + km.key;})
@@ -133,6 +128,20 @@
           }
         ];
     in
-      leaderkm;
+      leaderkm
+      ++ [
+        {
+          key = "c";
+          action = ''"_c'';
+        }
+        {
+          key = "d";
+          action = ''"_d'';
+        }
+        {
+          key = "y";
+          action = ''y']'';
+        }
+      ];
   };
 }
