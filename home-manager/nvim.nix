@@ -7,6 +7,39 @@
     colorschemes.tokyonight.enable = true;
     plugins = {
       auto-session.enable = true;
+      lualine.enable = true;
+      nvim-cmp = {
+        enable = true;
+        autoEnableSources = true;
+        sources = [
+          {name = "nvim_lsp";}
+          {name = "path";}
+          {name = "buffer";}
+          # {name = "luasnip";}
+        ];
+
+        mapping = {
+          "<CR>" = "cmp.mapping.confirm({ select = true })";
+          "<Tab>" = {
+            action = ''
+              function(fallback)
+                if cmp.visible() then
+                  cmp.select_next_item()
+                -- elseif luasnip.expandable() then
+                --   luasnip.expand()
+                -- elseif luasnip.expand_or_jumpable() then
+                --   luasnip.expand_or_jump()
+                elseif check_backspace() then
+                  fallback()
+                else
+                  fallback()
+                end
+              end
+            '';
+            modes = ["i" "s"];
+          };
+        };
+      };
       noice.enable = true;
       neo-tree = {
         enable = true;
@@ -26,10 +59,6 @@
       };
       telescope.enable = true;
       which-key.enable = true;
-      nvim-cmp = {
-        enable = false;
-        mappingPresets = ["insert"];
-      };
       cmp-vim-lsp.enable = false;
       lsp-format = {
         enable = true;
@@ -40,19 +69,21 @@
         servers = {
           nil_ls = {
             enable = true;
-            cmd = ["${pkgs.nil}/bin/nil"];
             settings.formatting.command = ["${pkgs.alejandra}/bin/alejandra"];
           };
-          lua-ls = {
+          lua-ls.enable = true;
+          pyright.enable = true;
+          rust-analyzer = {
             enable = true;
-            cmd = ["${pkgs.lua-language-server}/bin/lua-language-server"];
+            installCargo = true;
+            installRustc = true;
           };
         };
       };
     };
     extraPlugins = with pkgs.vimPlugins; [
       hydra-nvim
-      playground # treesitter playground
+      # playground # treesitter playground
     ];
     clipboard = {
       providers.wl-copy.enable = true;
@@ -79,10 +110,10 @@
     in {
       "lua/nvfs-keymaps.lua" = builtins.readFile "${nvfs}/lua/user/keymaps.lua";
     };
-    extraConfigLuaPre = ''
-      vim.cmd [[redir! > vim_log.txt]]
-      vim.cmd [[echom "Test Message"]]
-    '';
+    # extraConfigLuaPre = ''
+    #   vim.cmd [[redir! > vim_log.txt]]
+    #   vim.cmd [[echom "Test Message"]]
+    # '';
     extraConfigLua = with builtins; readFile ./nvim-extraconfig.lua;
     keymaps = let
       leaderkm =
@@ -130,17 +161,22 @@
     in
       leaderkm
       ++ [
+        # c and d don't cut the removed text
         {
           key = "c";
           action = ''"_c'';
+          mode = "x";
         }
         {
           key = "d";
           action = ''"_d'';
+          mode = "x";
         }
         {
+          # move to the end of region after yanking
           key = "y";
           action = ''y']'';
+          mode = "x";
         }
       ];
   };

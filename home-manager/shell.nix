@@ -2,7 +2,7 @@
   home.packages = with pkgs; [
     htop
     fortune
-    # zoxide
+
     killall
   ];
   programs.fish = {
@@ -18,6 +18,7 @@
       abbr --add ns --set-cursor "nix shell nixpkgs#%"
       abbr --add nix-list --set-cursor 'find $(nix build nixpkgs#% --print-out-paths --no-link) -print0 | ${pkgs.nnn}/bin/nnn'
       abbr --add nr "nix_run"
+      set EDITOR nvim
     '';
     plugins = [
       {
@@ -39,15 +40,6 @@
         };
       }
     ];
-    shellAliases = {
-      nix-shell = "nix-shell --command fish";
-    };
-
-    functions = {
-      fish_user_key_bindings = ''
-
-      '';
-    };
   };
   programs.nix-index.enable = true;
 }

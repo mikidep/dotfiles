@@ -23,6 +23,7 @@ in {
     ./sway.nix
   ];
   _module.args = {inherit bg;};
+  services.udiskie.enable = true;
   xdg = {
     enable = true;
 
