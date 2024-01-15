@@ -9,8 +9,14 @@
   services.mako = {
     enable = true;
     anchor = "bottom-right";
-    defaultTimeout = 2000;
+    defaultTimeout = 5000;
     groupBy = "app-icon";
+    extraConfig = let
+      makoctl = "${pkgs.mako}/bin/makoctl";
+      rofi = "${pkgs.rofi-wayland}/bin/rofi";
+    in ''
+      on-notify=exec ${makoctl} menu ${rofi} -dmenu -p "Choose action:"
+    '';
   };
 
   programs.wezterm = {
@@ -79,6 +85,9 @@
         output = {
           "*" = {
             bg = "${bg} center #000000";
+          };
+          "HDMI-A-1" = {
+            res = "2560x1440";
           };
         };
 

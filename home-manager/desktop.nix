@@ -28,7 +28,11 @@ in {
     enable = true;
 
     configFile = {
-      # "wireplumber/bluetooth.lua.d/".text = "hello";
+      "pipewire/pipewire-pulse.conf.d/switch-on-connect.conf".text = ''
+        pulse.cmd = [
+            { cmd = "load-module" args = "module-switch-on-connect" }
+        ]
+      '';
     };
 
     desktopEntries.whatsapp = {

@@ -29,8 +29,8 @@
                 --   luasnip.expand()
                 -- elseif luasnip.expand_or_jumpable() then
                 --   luasnip.expand_or_jump()
-                elseif check_backspace() then
-                  fallback()
+                -- elseif check_backspace() then
+                --   fallback()
                 else
                   fallback()
                 end
@@ -84,6 +84,7 @@
     extraPlugins = with pkgs.vimPlugins; [
       hydra-nvim
       # playground # treesitter playground
+      nvim-lspconfig
     ];
     clipboard = {
       providers.wl-copy.enable = true;
@@ -114,7 +115,14 @@
     #   vim.cmd [[redir! > vim_log.txt]]
     #   vim.cmd [[echom "Test Message"]]
     # '';
-    extraConfigLua = with builtins; readFile ./nvim-extraconfig.lua;
+    extraConfigLua = with builtins;
+      replaceStrings [
+        "@openscad-lsp@"
+      ]
+      [
+        "${pkgs.openscad-lsp}/bin/openscad-lsp"
+      ]
+      (readFile ./nvim-extraconfig.lua);
     keymaps = let
       leaderkm =
         map (km: km // {key = "<leader>" + km.key;})
