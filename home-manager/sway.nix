@@ -80,6 +80,8 @@
         input."*" = {
           xkb_layout = "it";
           xkb_numlock = "enabled";
+          tap = "enabled";
+          tap_button_map = "lrm";
         };
 
         output = {
