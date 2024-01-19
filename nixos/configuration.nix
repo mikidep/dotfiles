@@ -28,6 +28,9 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  networking.networkmanager.plugins = [
+    pkgs.networkmanager-openvpn
+  ];
 
   # Set your time zone.
   # time.timeZone = "Europe/Tallinn";
@@ -201,7 +204,7 @@
       settings = {
         default_session = {
           # command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd sway";
+          command = ''${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd sway'';
           user = "greeter";
         };
       };

@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  config,
   bg,
   ...
 }: {
@@ -42,14 +43,6 @@
     rofi = "${pkgs.rofi-wayland}/bin/rofi";
     rofi-menu = ''${rofi} -show combi -combi-modes "window,drun" -show-icons -theme solarized'';
     rofi-run = ''${rofi} -show run -theme solarized'';
-    dbus-sway-environment =
-      pkgs.writeShellScript "dbus-sway-environment"
-      ''
-        dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
-        systemctl --user stop pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
-        systemctl --user start pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
-      '';
-
     # currently, there is some friction between sway and gtk:
     # https://github.com/swaywm/sway/wiki/GTK-3-settings-on-Wayland
     # the suggested way to set gtk settings is with gsettings
@@ -71,7 +64,15 @@
       );
   in {
     enable = true;
-    package = pkgs.swayfx;
+    package = let
+      cfg = config.wayland.windowManager.sway;
+    in
+      pkgs.swayfx.override {
+        extraSessionCommands = cfg.extraSessionCommands;
+        extraOptions = cfg.extraOptions;
+        withBaseWrapper = cfg.wrapperFeatures.base;
+        withGtkWrapper = cfg.wrapperFeatures.gtk;
+      };
 
     systemd.enable = true;
 
@@ -164,7 +165,6 @@
     extraConfig = let
       launch = "${pkgs.xdg-launch}/bin/xdg-launch";
     in ''
-      exec ${dbus-sway-environment}
       exec ${configure-gtk}
 
       bindswitch lid:on output eDP-1 disable
