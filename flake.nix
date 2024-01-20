@@ -19,18 +19,11 @@
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    ags = {
-      url = "github:Aylur/ags";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     sway-new-workspace = {
       url = "github:mikidep/sway-new-workspace";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    neovim-flake = {
-      url = "github:cwfryer/neovim-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    cosmic-flake.url = "github:cosmic-nix/cosmic-flake";
   };
 
   outputs = inputs @ {
@@ -41,11 +34,6 @@
     ...
   }: let
     system = "x86_64-linux";
-
-    pkgs = import nixpkgs {
-      inherit system;
-      config.allowUnfree = true;
-    };
   in {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       specialArgs = {inherit system;};
