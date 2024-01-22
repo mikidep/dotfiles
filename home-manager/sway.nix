@@ -62,6 +62,17 @@
           gsettings set $gnome_schema gtk-theme 'Dracula'
         ''
       );
+    update-lid =
+      pkgs.writeShellScript
+      "update-lid"
+      ''
+        #!/bin/sh
+        if grep -q open /proc/acpi/button/lid/LID/state; then
+            swaymsg output eDP-1 enable
+        else
+            swaymsg output eDP-1 disable
+        fi
+      '';
   in {
     enable = true;
     package = let
@@ -90,7 +101,8 @@
             bg = "${bg} center #000000";
           };
           "HDMI-A-1" = {
-            res = "2560x1440";
+            # res = "2560x1440";
+            scale = "2";
           };
         };
 
@@ -166,6 +178,7 @@
       launch = "${pkgs.xdg-launch}/bin/xdg-launch";
     in ''
       exec ${configure-gtk}
+      exec_always ${update-lid}
 
       bindswitch lid:on output eDP-1 disable
       bindswitch lid:off output eDP-1 enable
