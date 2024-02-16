@@ -24,6 +24,8 @@
     archivemount
     nnn
     trashy
+    feh
+    v2raya
 
     firefox
     chromium
@@ -41,7 +43,6 @@
     alsa-tools
     qpwgraph
     reaper
-    davinci-resolve
   ];
 
   fonts.fontconfig.enable = true;

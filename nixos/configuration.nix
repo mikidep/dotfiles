@@ -4,6 +4,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: {
   imports = [
@@ -11,6 +12,7 @@
     ./hardware-configuration.nix
     # ./prime.nix
     ./docker.nix
+    ./gnome.nix
   ];
   boot.loader = {
     # Bootloader.
@@ -18,7 +20,7 @@
     efi.canTouchEfiVariables = true;
     systemd-boot.configurationLimit = 5;
   };
-  boot.plymouth.enable = true;
+  # boot.plymouth.enable = true;
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -55,7 +57,7 @@
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
+      # xdg-desktop-portal-gtk
       xdg-desktop-portal-wlr
     ];
   };
@@ -156,6 +158,11 @@
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
+    # settings = {
+    #   substituters = lib.mkBefore ["https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"];
+    #   trusted-users = ["mikidep"];
+    #   require-sigs = false;
+    # };
   };
   environment = {
     sessionVariables = {
@@ -200,7 +207,7 @@
     '';
 
     greetd = {
-      enable = true;
+      enable = false;
       settings = {
         default_session = {
           # command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
