@@ -12,7 +12,6 @@
     ./hardware-configuration.nix
     # ./prime.nix
     ./docker.nix
-    ./gnome.nix
   ];
   boot.loader = {
     # Bootloader.
@@ -21,6 +20,7 @@
     systemd-boot.configurationLimit = 5;
   };
   # boot.plymouth.enable = true;
+  # boot.crashDump.enable = true;
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -207,7 +207,7 @@
     '';
 
     greetd = {
-      enable = false;
+      enable = true;
       settings = {
         default_session = {
           # command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";

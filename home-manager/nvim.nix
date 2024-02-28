@@ -10,6 +10,9 @@
       auto-session.enable = true;
       lualine.enable = true;
       luasnip.enable = true;
+      markdown-preview = {
+        enable = true;
+      };
       nvim-cmp = {
         enable = true;
         autoEnableSources = true;

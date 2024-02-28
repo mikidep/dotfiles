@@ -100,14 +100,16 @@
           "*" = {
             bg = "${bg} center #000000";
           };
-          "HDMI-A-1" = {
-            # res = "2560x1440";
+          "Dell Inc. DELL P2719HC H5F9QS2" = {
             scale = "1";
+          };
+          "LG Electronics LG HDR 4K 0x0000B7E8" = {
+            scale = "2";
           };
         };
 
         window.titlebar = false;
-        terminal = "wezterm";
+        terminal = "kitty";
         menu = rofi-menu;
         modifier = "Mod4";
 
