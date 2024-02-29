@@ -188,9 +188,9 @@
       workspace number 1
       exec firefox
       workspace number 2
-      exec wezterm
+      exec kitty
       workspace number 9
-      exec org.telegram.desktop
+      exec telegram-desktop
       exec ${launch} whatsapp
     '';
   };

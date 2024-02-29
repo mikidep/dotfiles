@@ -19,6 +19,27 @@ in {
   #   targets.kitty.enable = false;
   # };
 
+  programs.firefox = {
+    enable = true;
+    profiles.default = {
+      id = 0;
+      name = "default";
+      isDefault = true;
+      settings = {
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+      };
+      userChrome = ''
+        #TabsToolbar {
+          visibility: collapse;
+        }
+
+        #statuspanel {
+          opacity: 0 !important;
+        }
+      '';
+    };
+  };
+
   imports = [
     ./sway.nix
   ];

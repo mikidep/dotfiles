@@ -19,3 +19,4 @@ Hydra({
 require 'lspconfig'.openscad_lsp.setup {
   cmd = { "@openscad-lsp@", "--stdio" }
 }
+

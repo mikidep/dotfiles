@@ -12,6 +12,7 @@
     ./hardware-configuration.nix
     # ./prime.nix
     ./docker.nix
+    ./cosmic.nix
   ];
   boot.loader = {
     # Bootloader.

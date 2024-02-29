@@ -17,13 +17,12 @@
     };
     nixvim = {
       url = "github:nix-community/nixvim";
-      # inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     sway-new-workspace = {
       url = "github:mikidep/sway-new-workspace";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # cosmic-flake.url = "github:cosmic-nix/cosmic-flake";
   };
 
   outputs = inputs @ {

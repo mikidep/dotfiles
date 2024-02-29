@@ -27,7 +27,6 @@
     feh
     v2raya
 
-    firefox
     chromium
     # discord
     telegram-desktop

@@ -93,16 +93,17 @@
       hydra-nvim
       # playground # treesitter playground
       nvim-lspconfig
-      # (pkgs.vimUtils.buildVimPlugin
-      #   {
-      #     name = "marp-nvim";
-      #     src = pkgs.fetchFromGitHub {
-      #       owner = "mpas";
-      #       repo = "marp-nvim";
-      #       rev = "dce795d";
-      #       hash = "sha256-6m2FkJ1Th6lHIwDSPrxLBXVg9sja1TMvSSQNp+Srpw0=";
-      #     };
-      #   })
+      plenary-nvim
+      (pkgs.vimUtils.buildVimPlugin
+        {
+          name = "agda.nvim";
+          src = pkgs.fetchFromGitHub {
+            owner = "Isti115";
+            repo = "agda.nvim";
+            rev = "4dbd441";
+            hash = "sha256-FBC8+Pr/CkgXLDjzg8TJyp1bkJYaACSd/ORZn+L5DPk=";
+          };
+        })
     ];
     clipboard = {
       providers.wl-copy.enable = true;
