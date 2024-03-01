@@ -67,5 +67,11 @@ in {
       exec = ''${pkgs.chromium}/bin/chromium --app="https://web.whatsapp.com/"'';
       terminal = false;
     };
+    mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "application/pdf" = "okularApplication_pdf.desktop";
+      };
+    };
   };
 }

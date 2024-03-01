@@ -8,7 +8,7 @@
   home.packages = with pkgs; [swaybg];
 
   services.mako = {
-    enable = true;
+    enable = false;
     anchor = "bottom-right";
     defaultTimeout = 5000;
     groupBy = "app-icon";

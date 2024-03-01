@@ -4,7 +4,6 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }: {
   imports = [
@@ -12,7 +11,7 @@
     ./hardware-configuration.nix
     # ./prime.nix
     ./docker.nix
-    ./cosmic.nix
+    # ./cosmic.nix
   ];
   boot.loader = {
     # Bootloader.
