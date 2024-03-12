@@ -1,4 +1,8 @@
-{pkgs, ...}: let
+{
+  pkgs,
+  lib,
+  ...
+}: let
   bg = let
     convert = "${pkgs.imagemagick}/bin/convert";
     font = "${pkgs.iosevka}/share/fonts/truetype/iosevka-extendedmediumitalic.ttf";
@@ -18,6 +22,11 @@ in {
   #   polarity = "dark";
   #   targets.kitty.enable = false;
   # };
+
+  i18n.inputMethod = {
+    enabled = "fcitx5";
+    fcitx5.addons = with pkgs; [fcitx5-gtk libsForQt5.fcitx5-qt];
+  };
 
   programs.firefox = {
     enable = true;
@@ -69,9 +78,23 @@ in {
     };
     mimeApps = {
       enable = true;
-      defaultApplications = {
-        "application/pdf" = "okularApplication_pdf.desktop";
-      };
+      defaultApplications = let
+        constVals = ks: v: lib.attrsets.genAttrs ks (lib.trivial.const v);
+      in
+        {
+          "application/pdf" = "okularApplication_pdf.desktop";
+        }
+        // (constVals [
+          "x-scheme-handler/http"
+          "x-scheme-handler/https"
+          "text/html"
+          "application/x-extension-htm"
+          "application/x-extension-html"
+          "application/x-extension-shtml"
+          "application/xhtml+xml"
+          "application/x-extension-xhtml"
+          "application/x-extension-xht"
+        ] "firefox.desktop");
     };
   };
 }

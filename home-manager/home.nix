@@ -28,7 +28,7 @@
     v2raya
 
     chromium
-    # discord
+    discord
     telegram-desktop
     gimp
     vlc

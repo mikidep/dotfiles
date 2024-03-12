@@ -23,6 +23,10 @@
       url = "github:mikidep/sway-new-workspace";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixpkgs-wayland = {
+      url = "github:nix-community/nixpkgs-wayland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -30,6 +34,7 @@
     nixpkgs,
     musnix,
     home-manager,
+    nixpkgs-wayland,
     ...
   }: let
     system = "x86_64-linux";
@@ -52,6 +57,7 @@
                 (_: _: {
                   sway-new-workspace = sway-new-workspace.packages.${system}.default;
                 })
+                # nixpkgs-wayland.overlay
               ];
             }
           ];

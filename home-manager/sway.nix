@@ -5,20 +5,7 @@
   bg,
   ...
 }: {
-  home.packages = with pkgs; [swaybg];
-
-  services.mako = {
-    enable = false;
-    anchor = "bottom-right";
-    defaultTimeout = 5000;
-    groupBy = "app-icon";
-    extraConfig = let
-      makoctl = "${pkgs.mako}/bin/makoctl";
-      rofi = "${pkgs.rofi-wayland}/bin/rofi";
-    in ''
-      on-notify=exec ${makoctl} menu ${rofi} -dmenu -p "Choose action:"
-    '';
-  };
+  home.packages = with pkgs; [swaybg swaynotificationcenter];
 
   programs.wezterm = {
     enable = true;
@@ -78,13 +65,12 @@
     package = let
       cfg = config.wayland.windowManager.sway;
     in
-      pkgs.swayfx.override {
+      pkgs.sway.override {
         extraSessionCommands = cfg.extraSessionCommands;
         extraOptions = cfg.extraOptions;
         withBaseWrapper = cfg.wrapperFeatures.base;
         withGtkWrapper = cfg.wrapperFeatures.gtk;
       };
-
     systemd.enable = true;
 
     config = {...}: {
@@ -146,18 +132,51 @@
           (
             let
               sway-nw = "${pkgs.sway-new-workspace}/bin/sway-new-workspace";
-            in {
-              "H" = "workspace prev_on_output";
-              "Left" = "workspace prev_on_output";
-              "L" = "workspace next_on_output";
-              "Right" = "workspace next_on_output";
-              "Shift+H" = "move container to workspace prev_on_output, workspace prev_on_output;";
-              "Shift+Left" = "move container to workspace prev_on_output, workspace prev_on_output;";
-              "Shift+L" = "move container to workspace next_on_output, workspace next_on_output;";
-              "Shift+Right" = "move container to workspace next_on_output, workspace next_on_output;";
-              "N" = "exec ${sway-nw} open";
-              "Shift+N" = "exec ${sway-nw} move";
-            }
+              sway-workspace = let
+                repo = pkgs.fetchFromGitHub {
+                  owner = "matejc";
+                  repo = "sway-workspace";
+                  rev = "0ca7c7d";
+                  hash = "sha256-4Jyyve9HqiSzE+WGooKnzXjnIG+6HZIolf0P7fo47HU=";
+                };
+                pkg = pkgs.rustPlatform.buildRustPackage {
+                  name = "sway-workspace";
+                  src = repo;
+                  cargoSha256 = "sha256-DRUd2nSdfgiIiCrBUiF6UTPYb6i8POQGo1xU5CdXuUY=";
+                };
+              in "${pkg}/bin/sway-workspace";
+              movements = {
+                left,
+                right,
+                up,
+                down,
+              }: {
+                "${left}" = "workspace prev_on_output";
+                "${right}" = "workspace next_on_output";
+                "${up}" = "exec ${sway-workspace} prev-output";
+                "${down}" = "exec ${sway-workspace} next-output";
+                "Shift+${left}" = "move container to workspace prev_on_output, workspace prev_on_output;";
+                "Shift+${right}" = "move container to workspace next_on_output, workspace next_on_output;";
+                "Shift+${up}" = "exec ${sway-workspace} --move prev-output";
+                "Shift+${down}" = "exec ${sway-workspace} --move next-output";
+              };
+            in
+              (movements {
+                left = "H";
+                right = "L";
+                down = "J";
+                up = "K";
+              })
+              // (movements {
+                left = "Left";
+                right = "Right";
+                down = "Down";
+                up = "Up";
+              })
+              // {
+                "N" = "exec ${sway-nw} open";
+                "Shift+N" = "exec ${sway-nw} move";
+              }
           )
           // (
             let
