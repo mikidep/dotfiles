@@ -6,24 +6,26 @@
   ...
 }: {
   home.packages = with pkgs; [swaybg swaynotificationcenter];
-
-  programs.wezterm = {
+  programs.waybar = {
     enable = true;
-    extraConfig = ''
-      local config = {}
-      config.window_decorations = "RESIZE"
-      config.enable_tab_bar = false
-      config.font_size = 12
-      config.window_padding = {
-        left = "2pt",
-        right = "2pt",
-        top = 0,
-        bottom = 0,
-      }
-      config.adjust_window_size_when_changing_font_size = false
-      -- config.use_resize_increments = true
-      return config
-    '';
+    systemd.enable = true;
+    settings.mainBar = {
+      position = "bottom";
+      layer = "top";
+      modules-left = ["sway/workspaces" "sway/mode"];
+      modules-center = ["sway/window"];
+      modules-right = ["battery" "clock"];
+      "sway/window" = {
+        max-length = 50;
+      };
+      battery = {
+        format = "{capacity}% {icon}";
+        format-icons = ["" "" "" "" ""];
+      };
+      clock = {
+        format-alt = "{:%a, %d. %b  %H:%M}";
+      };
+    };
   };
 
   wayland.windowManager.sway = let
@@ -99,15 +101,7 @@
         menu = rofi-menu;
         modifier = "Mod4";
 
-        bars = [
-          {
-            fonts = {
-              names = ["Monospace"];
-              size = 12.0;
-            };
-            statusCommand = "${pkgs.i3status}/bin/i3status";
-          }
-        ];
+        bars = [];
 
         gaps = {
           inner = 3;
