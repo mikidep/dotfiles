@@ -43,7 +43,7 @@ in {
         }
 
         #statuspanel {
-          opacity: 0 !important;
+          opacity: 0.5 !important;
         }
       '';
     };
