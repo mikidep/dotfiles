@@ -76,6 +76,13 @@ in {
       exec = ''${pkgs.chromium}/bin/chromium --app="https://web.whatsapp.com/"'';
       terminal = false;
     };
+    desktopEntries.feh = {
+      type = "Application";
+      name = "Feh";
+      comment = "Launch Feh";
+      exec = ''${pkgs.feh}/bin/feh %U'';
+      terminal = false;
+    };
     mimeApps = {
       enable = true;
       defaultApplications = let
@@ -94,7 +101,14 @@ in {
           "application/xhtml+xml"
           "application/x-extension-xhtml"
           "application/x-extension-xht"
-        ] "firefox.desktop");
+        ] "firefox.desktop")
+        // (constVals (map (s: "image/" + s) [
+          "jpeg"
+          "png"
+          "gif"
+          "tiff"
+          "bmp"
+        ]) "feh.desktop");
     };
   };
 }
