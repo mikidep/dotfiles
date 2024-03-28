@@ -30,7 +30,8 @@
 
   wayland.windowManager.sway = let
     rofi = "${pkgs.rofi-wayland}/bin/rofi";
-    rofi-menu = ''${rofi} -show combi -combi-modes "window,drun" -show-icons -theme solarized'';
+    rofi-pm = ''${pkgs.rofi-power-menu}/bin/rofi-power-menu'';
+    rofi-menu = ''${rofi} -show combi -combi-modes "window,pm:${rofi-pm},drun" -show-icons -theme solarized'';
     rofi-run = ''${rofi} -show run -theme solarized'';
     # currently, there is some friction between sway and gtk:
     # https://github.com/swaywm/sway/wiki/GTK-3-settings-on-Wayland
